@@ -1,5 +1,9 @@
-% 此处显示命令摘要
-disp(' ')
+%%%%%%%%%%%%%%%%%%%
+% Author: Lige
+% Date: 2022.2.10
+% Description:
+%    The shortcut will regenerate C code whether the current opened simulink file is modified or not.
+%%%%%%%%%%%%%%%%%%%disp(' ')
 disp(' ')
 disp(' ')
 disp('***************************************************************************************************')
@@ -9,12 +13,14 @@ disp('*                                                                         
 disp('***************************************************************************************************')
 
 if(~isempty(bdroot))
+    %delete slprj folder
     try
         rmdir slprj\ s
         disp('***************************************************************************************************')
         disp('Delete slprj fold!')
     catch
     end
+    %delete build folder of the current opened simulink model
     folder_name = [bdroot '*'];
     try
         rmdir(folder_name,'s')
@@ -22,6 +28,7 @@ if(~isempty(bdroot))
         disp('Delete folder of code generation of the model!')
     catch
     end
+    %delete temp file of the current opened simulink model
     try 
         delete(['*.slxc'])
         disp('***************************************************************************************************')
