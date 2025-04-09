@@ -1,7 +1,7 @@
 classdef AutoTools
     %UNTITLED4 Summary of this class goes here
     %   Detailed explanation goes here
-    methods(Static)
+    methods(Static = true)
         %%
         %table element name:
         %above or below: 1?0
@@ -61,7 +61,8 @@ classdef AutoTools
                     handle_input = add_block(hanles_block_list{1}, [model_name '/' input_name],'CopyOption', 'duplicate','MakeNameUnique','on');
                 end
                 input_flag_name = char(table_set{i,8});
-                handle_input_flag = add_block('simulink/Sources/In1', [model_name '/' input_flag_name], 'MakeNameUnique','on');
+                handle_input_flag = add_block('simulink/Sources/Constant', [model_name '/' input_flag_name], 'MakeNameUnique','on');
+                set(handle_input_flag, 'Value', 'false')
 
                 output_name = char(table_set{i,9});
                 handle_output = add_block('simulink/Sinks/Out1', [model_name '/' output_name], 'MakeNameUnique','on');
@@ -91,9 +92,10 @@ classdef AutoTools
                 end
                 Simulink.BlockDiagram.arrangeSystem(model_name)
             end
+            Simulink.BlockDiagram.arrangeSystem(model_name)
         end
     end
-    methods(Static)
+    methods(Static = true)
         function BlockConnect(src, dect, map)
             if(size(map,2) ~= 2)
                 error('the matrix is not *x2')
@@ -108,4 +110,18 @@ classdef AutoTools
             end
         end
     end
+    methods(Static = true)
+        function SetSubsystemOutputName(sys)
+            arguments
+                sys (1,:) char = gcb
+            end
+            block_list = find_system(sys, 'SearchDepth',1,'BlockType', 'Outport');
+            handle_block_port = get_param(sys, 'PortHandles');
+            handle_outs = handle_block_port.Outport;
+            for i = 1 : length(handle_outs)
+                set(handle_outs(i),'Name', get_param(block_list{i}, 'Name'))
+            end
+        end
+    end
+
 end
